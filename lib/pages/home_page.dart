@@ -34,20 +34,85 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            // ========================================
-            //[menu GRID SECTION]
-            // ========================================
-            _buildGridMenuSection(),
-            //=========================================
-            //[CAROSEUL SECTION]
-            //=========================================
-            _buildCaroucelSection(),
-          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              //=========================================
+              //[MENU WAKTU SHOLAT BY LOKASI]
+              //=========================================
+              _buildHeroSection(),
+              // ========================================
+              //[menu GRID SECTION]
+              // ========================================
+              _buildGridMenuSection(),
+              //=========================================
+              //[CAROSEUL SECTION]
+              //=========================================
+              _buildCaroucelSection(),
+            ],
+          ),
         ),
       ),
+    );
+  }
+  //=========================================
+  //[MENU HERO WIDGET]
+  //=========================================
+  Widget _buildHeroSection() {
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        Container(
+          width: double.infinity,
+          height: 290,
+          decoration: BoxDecoration(
+            color: Color(0xFFB3E5FC),
+            borderRadius: BorderRadius.only(
+              bottomRight: Radius.circular(30),
+              bottomLeft: Radius.circular(30)
+            ),
+            image: DecorationImage(image: AssetImage('assets/images/night.jpg'),
+            fit: BoxFit.cover)
+          ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 20
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Assalamu\'alaikum',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    color: Colors.white70,
+                    fontSize: 16
+                  ),
+                ),
+                Text(
+                  'Ngargoyoso',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsSemiBold',
+                    fontSize: 22,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                DateFormat('HH:mm').format(DateTime.now()),
+                style: TextStyle(
+                  fontFamily: 'PoppinsBold',
+                  fontSize: 50,
+                  height: 1.2,
+                  color: Colors.white
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
   //=========================================
@@ -59,33 +124,40 @@ class _HomePageState extends State<HomePage> {
     String routeName,
   )
   {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow:[
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            )
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          Navigator.pushNamed(context, routeName);
+        },
+        borderRadius: BorderRadius.circular(12),
+        splashColor: Colors.amber.withOpacity(0.2),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow:[
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              )
+              ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(iconPath, width: 35,),
+              const SizedBox(height: 6,),
+              Text(
+                tittle,
+                style: TextStyle(
+                  fontFamily: 'PoppinsRegular',
+                  fontSize: 13,
+                ),
+              )
             ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(iconPath, width: 35,),
-            const SizedBox(height: 6,),
-            Text(
-              tittle,
-              style: TextStyle(
-                fontFamily: 'PoppinsRegular',
-                fontSize: 13,
-              ),
-            )
-          ],
+          ),
         ),
       ),
     );
@@ -99,21 +171,23 @@ class _HomePageState extends State<HomePage> {
       child: GridView.count(
         crossAxisCount: 4,
         shrinkWrap: true,
+        mainAxisSpacing: 16,
+        crossAxisSpacing: 16,
         physics: const NeverScrollableScrollPhysics(),
         children: [
           _buildMenuItem(
           'assets/images/ic_menu_doa.png',
-          'Doa Harian',
+          'Doa',
           '/doa',
           ),
           _buildMenuItem(
           'assets/images/ic_menu_jadwal_sholat.png',
-          'Jadwal Sholat',
+          'Sholat',
           '/doa',
           ),
           _buildMenuItem(
             'assets/images/ic_menu_video_kajian.png',
-            'Vidio Kajian',
+            'Kajian',
             '/doa',
           ),
           _buildMenuItem(
@@ -121,6 +195,10 @@ class _HomePageState extends State<HomePage> {
             'Zakat',
             '/doa'
           ),
+          _buildMenuItem(
+            'assets/images/ic_menu_doa.png',
+            'Khuttbah',
+            '/doa',)
         ],
       ),
     );
