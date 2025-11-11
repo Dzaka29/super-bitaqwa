@@ -21,6 +21,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final CarouselController _controller = CarouselController();
   int _currentIndex = 0;
+  bool _isLoading = true;
+  Duration? _timeRemaining;
+  Timer? _counddownTimer;
+  String _location = 'Mengambil Lokasi....';
+  String _prayTime = 'Loading....';
+  String _backgroundImage = 'assets/images/morning.jpg';
+  List<dynamic>? _jadwalSholat;
+
+  //Fingsi text remaining waktu sholat
+  String _formatDuration(Duration d) {
+    final hours  = d.inHours;
+    final minute = d.inMinutes.remainder(60);
+    return "$hours jam $minute menit lagi";
+  }
+  
 
   final posterlist = const <String>[
     'assets/images/ramadan_karem.jpg',
@@ -30,6 +45,22 @@ class _HomePageState extends State<HomePage> {
     'assets/images/morning.jpg',
     'assets/images/night.jpg',
   ];
+
+  //state untuk dijalankan diawal
+  @override
+  void initState() {
+    super.initState();
+  }
+  
+
+  Future<String> _getBackgroundImage(DateTime now) async {
+    if (now.hour < 12) {
+      return 'assets/images/morning.jpg';
+    } else if (now.hour < 18) {
+      return 'assets/images/afternon.jpg';
+    }
+    return 'assets/images/night.jpg';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +73,10 @@ class _HomePageState extends State<HomePage> {
               //[MENU WAKTU SHOLAT BY LOKASI]
               //=========================================
               _buildHeroSection(),
+              const SizedBox(
+                height: 65,
+
+                ),
               // ========================================
               //[menu GRID SECTION]
               // ========================================
@@ -72,7 +107,7 @@ class _HomePageState extends State<HomePage> {
               bottomRight: Radius.circular(30),
               bottomLeft: Radius.circular(30)
             ),
-            image: DecorationImage(image: AssetImage('assets/images/night.jpg'),
+            image: DecorationImage(image: AssetImage('${_getBackgroundImage(DateTime.now())}'),
             fit: BoxFit.cover)
           ),
           child: Padding(
@@ -112,6 +147,64 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
+        //======[WAKTU SHOLAT]=======
+        Positioned(
+          bottom: -55,
+          left: 20,
+          right: 20,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [BoxShadow(
+                blurRadius: 2,
+                offset: Offset(0, 4),
+                color: Colors.amber.withOpacity(0.4)
+                )
+              ]
+            ),
+            padding: EdgeInsets.symmetric(
+              vertical: 16,
+              horizontal: 14
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'Waktu Sholat Selanjutnya',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                ),
+                Text(
+                  'Ashar',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsBold',
+                    color: Colors.amber,
+                    fontSize: 20
+                  ),
+                ),
+                Text(
+                  '14:22',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsBold',
+                    fontSize: 28,
+                    color: Colors.black38
+                  ),
+                ),
+                Text(
+                  '5 Jam 10 Menit',
+                  style: TextStyle(
+                    fontFamily: 'PoppinsRegular',
+                    fontSize: 13,
+                    color: Colors.grey
+                  ),
+                )
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
